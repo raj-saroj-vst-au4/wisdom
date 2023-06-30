@@ -74,12 +74,17 @@ const handleAdd = async (req, res) => {
 
 const handleFetch = async (req, res)=>{
   const studentId = req.params.studentId;
-  const monthlyFee = await MonthlyFee.findOne({ student: studentId });
-  if(monthlyFee){
-      res.status(200).send(monthlyFee)
-  }else{
-      res.status(404).send("no data found")
+  try {
+    const monthlyFee = await MonthlyFee.findOne({ student: studentId });
+    if(monthlyFee){
+        res.status(200).send(monthlyFee)
+    }else{
+        res.status(404).send("no data found")
+    }
+  }catch(err){
+    res.status(500).send(err);
   }
+
 }
 
 module.exports = {handleAdd, handleFetch}
