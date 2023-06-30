@@ -1,11 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors')
+const mongoose = require('mongoose')
 
 const student = require('./handleStudent');
 const fee = require('./handleFee');
 
 require('dotenv').config()
+const uri = `mongodb+srv://${process.env.DBUID}:${process.env.DBPASS}@wisdomcluster.l40bgon.mongodb.net/wisdomdb`;
 
 const app = express();
 
@@ -21,6 +23,22 @@ app.post('/addFee/:studentId', fee.handleAdd);
 
 // )
 
-app.listen(process.env.PORT, ()=>{
-    console.log("backend server running")
-})
+dbconnect();
+
+function listen() {
+    app.listen(process.env.PORT, ()=>{
+        console.log("backend server running")
+    })
+}   
+
+
+function dbconnect() {
+    mongoose.connection
+      .on('error', console.log)
+      .on('disconnected', dbconnect)
+      .once('open', listen);
+    return mongoose.connect(uri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    });
+  }
