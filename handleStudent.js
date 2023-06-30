@@ -45,4 +45,16 @@ const handleFetch = async (req, res) => {
   }
 };
 
-module.exports = {handleAdd, handleFetch}
+const handleDel = async (req, res) =>{
+  const studentId = req.params.studentId;
+  try{
+    await Student.findOneAndDelete({_id:studentId})
+    res.status(203).send("Student Deleted Successfully")
+  }
+  catch(err){
+    res.status(400).send(err)
+  }
+
+}
+
+module.exports = {handleAdd, handleFetch, handleDel}

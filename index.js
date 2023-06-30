@@ -18,6 +18,8 @@ app.use(cors({
 
 app.get('/fetchStudents', student.handleFetch);
 app.post('/addStudent', student.handleAdd);
+
+app.delete('/delStudent/:studentId', student.handleDel)
 app.get('/fetchFee/:studentId', fee.handleFetch)
 app.post('/addFee/:studentId', fee.handleAdd);
 
