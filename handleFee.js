@@ -10,11 +10,11 @@ const handleAdd = async (req, res) => {
   const year = req.body.year;
   const month = req.body.month;
   const value = req.body.value;
+  const fee = req.body.fee;
   try {
       // Check if the student exists
       const student = await Student.findById(studentId);
       if (!student) {
-        console.log('Student not found');
         rescode = 404;
         resmsg = 'Student not found'
         return;
@@ -28,7 +28,7 @@ const handleAdd = async (req, res) => {
         if (monthlyFee.year.hasOwnProperty(year)) {
             const update = {
                 $set: {
-                  [`year.${year}.${month}`]: value
+                  [`year.${year}.${month}`]: {fee: fee, time: new Date()}
                 }
               };
               monthlyFee = await MonthlyFee.findOneAndUpdate(
@@ -38,13 +38,13 @@ const handleAdd = async (req, res) => {
         }else{
             const update = {
                 $set: {
-                  [`year.${year}`]: Array.from({ length: 12 }, (_, i) => i === month ? value : false)
+                  [`year.${year}`]: Array.from({ length: 12 }, (_, i) => i === month ? {fee: fee, time: new Date()} : false)
                 }
               };
               monthlyFee = await MonthlyFee.findOneAndUpdate(
                 { student: studentId },
                 update,
-                { new: true }
+                { new: {fee: fee, time: new Date()} }
               );
         }
         console.log('Monthly fee details updated successfully');
