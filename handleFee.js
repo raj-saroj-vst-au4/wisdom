@@ -38,7 +38,7 @@ const handleAdd = async (req, res) => {
         }else{
             const update = {
                 $set: {
-                  [`year.${year}`]: Array.from({ length: 12 }, (_, i) => i === month ? {fee: fee, time: new Date()} : false)
+                  [`year.${year}`]: Array.from({ length: 12 }, (_, i) => i === month ? value : false)
                 }
               };
               monthlyFee = await MonthlyFee.findOneAndUpdate(
