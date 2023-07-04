@@ -75,30 +75,32 @@ const handleAdd = async (req, res) => {
 
 const handleFetch = async (req, res)=>{
   const studentId = req.params.studentId;
-
   const student = await Student.findById(studentId);
   if (student) {
     try {
-      const monthlyFee = await MonthlyFee.findOne({ student: studentId });
+      let monthlyFee = await MonthlyFee.findOne({ student: studentId });
       if(monthlyFee){
+          
           res.status(200).send(monthlyFee)
       }else{
         const year = new Date().getFullYear()
+        console.log(year)
         monthlyFee = new MonthlyFee({
           student: studentId,
           year: {
             [year]: Array.from({ length: 12 }, (_, i) => false)
-          }
+          },
         });
         monthlyFee = await monthlyFee.save();
+        res.status(201).send("New db for the year created")
+
       }
     }catch(err){
+      console.log(err)
       res.status(500).send(err);
     }
   }else{
-    rescode = 404;
-    resmsg = 'Student not found'
-    return;
+    return res.status(404).send("Student Not Found in db")
   }
 
 
