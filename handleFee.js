@@ -83,6 +83,7 @@ const handleFetch = async (req, res)=>{
       if(monthlyFee){
           res.status(200).send(monthlyFee)
       }else{
+        const year = new Date().getFullYear()
         monthlyFee = new MonthlyFee({
           student: studentId,
           year: {
