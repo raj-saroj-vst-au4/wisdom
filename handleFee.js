@@ -75,14 +75,15 @@ const handleAdd = async (req, res) => {
 
 const handleFetch = async (req, res)=>{
   const studentId = req.params.studentId;
-  let rescode = 500;
-  let resmsg = "Error"
+  
   const student = await Student.findById(studentId);
   if (student) {
     try {
+      let rescode = 500;
+      let resmsg = "Error"
       let monthlyFee = await MonthlyFee.findOne({ student: studentId });
       if(monthlyFee){
-          recode = 200;
+          rescode = 200;
           resmsg = monthlyFee
       }else{
         const year = new Date().getFullYear()
@@ -97,7 +98,7 @@ const handleFetch = async (req, res)=>{
       }
     }catch(err){
       console.log(err)
-      rescode = 201;
+      rescode = 500;
       resmsg = err
     }finally{
       return res.status(rescode).send(resmsg)
