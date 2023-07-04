@@ -84,16 +84,14 @@ const handleFetch = async (req, res)=>{
           res.status(200).send(monthlyFee)
       }else{
         const year = new Date().getFullYear()
-        console.log(year)
         monthlyFee = new MonthlyFee({
           student: studentId,
           year: {
             [year]: Array.from({ length: 12 }, (_, i) => false)
           },
         });
-        monthlyFee = await monthlyFee.save();
-        res.status(201).send("New db for the year created")
-
+        monthlyFee = await monthlyFee.save()
+        return res.status(201).send(monthlyfee)
       }
     }catch(err){
       console.log(err)
