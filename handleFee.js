@@ -9,7 +9,6 @@ const handleAdd = async (req, res) => {
   const studentId = req.params.studentId;
   const year = req.body.year;
   const month = req.body.month;
-  const value = req.body.value;
   const fee = req.body.fee;
   try {
       // Check if the student exists
@@ -38,16 +37,14 @@ const handleAdd = async (req, res) => {
         }else{
             const update = {
                 $set: {
-                  [`year.${year}`]: Array.from({ length: 12 }, (_, i) => i === month ? value : false)
+                  [`year.${year}`]: Array.from({ length: 12 }, (_, i) => i === month ? {fee: fee, time: new Date()} : false)
                 }
               };
               monthlyFee = await MonthlyFee.findOneAndUpdate(
                 { student: studentId },
-                update,
-                { new: {fee: fee, time: new Date()} }
+                update
               );
         }
-        console.log('Monthly fee details updated successfully');
         rescode = 201;
         resmsg = 'Monthly fee details updated successfully'
       } else {
@@ -55,11 +52,10 @@ const handleAdd = async (req, res) => {
         monthlyFee = new MonthlyFee({
           student: studentId,
           year: {
-            [year]: Array.from({ length: 12 }, (_, i) => i === month ? value : false)
+            [year]: Array.from({ length: 12 }, (_, i) => i === month ? {fee: fee, time: new Date()} : false)
           }
         });
         monthlyFee = await monthlyFee.save();
-        console.log('Monthly fee details added successfully');
         rescode = 201;
         resmsg = 'Monthly fee details added successfully'
       }
