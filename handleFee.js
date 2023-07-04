@@ -73,10 +73,52 @@ const handleAdd = async (req, res) => {
     }
 }
 
+const handleDel = async (req, res)=>{
+  const studentId = req.params.studentId;
+  const year = req.body.year;
+  const month = req.body.month;
+  const fee = req.body.fee;
+  let rescode = 500;
+  let resmsg = "Error"
+
+  const student = await Student.findById(studentId);
+  if (student) {
+    try {
+      let monthlyFee = await MonthlyFee.findOne({ student: studentId });
+      if (monthlyFee?.year?.hasOwnProperty(year)) {
+        const update = {
+            $set: {
+              [`year.${year}.${month}`]: false
+            }
+          };
+          monthlyFee = await MonthlyFee.findOneAndUpdate(
+            { student: studentId },
+            update
+          );
+
+          rescode = 201,
+          resmsg = "Fee Deletion Successful"
+          monthlyFee = await monthlyFee.save();
+    }else{
+        rescode = 404
+        resmsg = "Entry already null"
+    }
+    }catch(err){
+      console.log(err)
+      rescode = 500;
+      resmsg = err
+    }finally{
+      return res.status(rescode).send(resmsg)
+    }
+  }else{
+    return res.status(404).send("Student Not Found in db")
+  }
+}
+
 const handleFetch = async (req, res)=>{
   const studentId = req.params.studentId;
-        let rescode = 500;
-      let resmsg = "Error"
+  let rescode = 500;
+  let resmsg = "Error"
   const student = await Student.findById(studentId);
   if (student) {
     try {
@@ -110,4 +152,4 @@ const handleFetch = async (req, res)=>{
 
 }
 
-module.exports = {handleAdd, handleFetch}
+module.exports = {handleAdd, handleDel, handleFetch}
