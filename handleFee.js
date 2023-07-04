@@ -11,6 +11,11 @@ const handleAdd = async (req, res) => {
   const month = req.body.month;
   const fee = req.body.fee;
   try {
+      if(!studentId){
+        rescode = 404;
+        resmsg = 'Student not found'
+        return;
+      }
       // Check if the student exists
       const student = await Student.findById(studentId);
       if (!student) {
@@ -70,16 +75,31 @@ const handleAdd = async (req, res) => {
 
 const handleFetch = async (req, res)=>{
   const studentId = req.params.studentId;
-  try {
-    const monthlyFee = await MonthlyFee.findOne({ student: studentId });
-    if(monthlyFee){
-        res.status(200).send(monthlyFee)
-    }else{
-        res.status(404).send("no data found")
+
+  const student = await Student.findById(studentId);
+  if (student) {
+    try {
+      const monthlyFee = await MonthlyFee.findOne({ student: studentId });
+      if(monthlyFee){
+          res.status(200).send(monthlyFee)
+      }else{
+        monthlyFee = new MonthlyFee({
+          student: studentId,
+          year: {
+            [year]: Array.from({ length: 12 }, (_, i) => false)
+          }
+        });
+        monthlyFee = await monthlyFee.save();
+      }
+    }catch(err){
+      res.status(500).send(err);
     }
-  }catch(err){
-    res.status(500).send(err);
+  }else{
+    rescode = 404;
+    resmsg = 'Student not found'
+    return;
   }
+
 
 }
 
