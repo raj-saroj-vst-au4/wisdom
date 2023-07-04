@@ -75,6 +75,8 @@ const handleAdd = async (req, res) => {
 
 const handleFetch = async (req, res)=>{
   const studentId = req.params.studentId;
+  let rescode = 500;
+  let resmsg = "Error"
   const student = await Student.findById(studentId);
   if (student) {
     try {
@@ -90,12 +92,13 @@ const handleFetch = async (req, res)=>{
             [year]: Array.from({ length: 12 }, (_, i) => false)
           },
         });
-        monthlyFee = await monthlyFee.save()
-        return res.status(201).send(monthlyfee)
+      resmsg = await monthlyFee.save()
       }
     }catch(err){
       console.log(err)
       res.status(500).send(err);
+    }finally{
+      return res.status(rescode).send(resmsg)
     }
   }else{
     return res.status(404).send("Student Not Found in db")
