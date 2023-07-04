@@ -82,8 +82,8 @@ const handleFetch = async (req, res)=>{
     try {
       let monthlyFee = await MonthlyFee.findOne({ student: studentId });
       if(monthlyFee){
-          
-          res.status(200).send(monthlyFee)
+          recode = 200;
+          resmsg = monthlyFee
       }else{
         const year = new Date().getFullYear()
         monthlyFee = new MonthlyFee({
@@ -92,11 +92,13 @@ const handleFetch = async (req, res)=>{
             [year]: Array.from({ length: 12 }, (_, i) => false)
           },
         });
-      resmsg = await monthlyFee.save()
+        rescode = 201
+        resmsg = await monthlyFee.save()
       }
     }catch(err){
       console.log(err)
-      res.status(500).send(err);
+      rescode = 201;
+      resmsg = err
     }finally{
       return res.status(rescode).send(resmsg)
     }
