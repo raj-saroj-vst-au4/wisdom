@@ -3,7 +3,6 @@ const Student = require('./models/studentSchema');
 require('dotenv').config()
 
 const handleAdd = async (req, res) => {
-  // Connect to MongoDB
   let rescode = 500;
   let resmsg = "Error"
   const studentId = req.params.studentId;
@@ -16,7 +15,7 @@ const handleAdd = async (req, res) => {
         resmsg = 'Student not found'
         return;
       }
-      // Check if the student exists
+
       const student = await Student.findById(studentId);
       if (!student) {
         rescode = 404;
@@ -24,11 +23,9 @@ const handleAdd = async (req, res) => {
         return;
       }
 
-      // Find the monthly fee document for the student
       let monthlyFee = await MonthlyFee.findOne({ student: studentId });
 
       if (monthlyFee) {
-        // Update the monthly fee details for the given year and month
         if (monthlyFee.year.hasOwnProperty(year)) {
             const update = {
                 $set: {
@@ -157,8 +154,9 @@ const handleFetch = async (req, res)=>{
             [year]: Array.from({ length: 12 }, (_, i) => false)
           },
         });
+        await Student.findByIdAndUpdate(studentId, {active: true})
         rescode = 201
-        resmsg = await monthlyFee.save()
+        resmsg = await monthlyFee.save() 
       }
     }catch(err){
       console.log(err)
