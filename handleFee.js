@@ -117,10 +117,22 @@ const handleDel = async (req, res)=>{
 
 
 const handleFetchall = async (req, res)=>{
-  const fees = await MonthlyFee.find();
-  if (fees) {
-    return res.status(200).json({ "data": fees });
-  } else {
+  try{
+    const fees = await Student.aggregate([
+      {
+        $lookup: {
+          from: 'monthlyfees', 
+          localField: '_id',
+          foreignField: 'student',
+          as: 'paymentData'
+        }
+      }
+    ]);
+    if (fees) {
+      return res.status(200).json({ "data": fees });
+    }
+  }
+  catch(err){
     return res.status(404).send("No Fee of any student found in Database");
   }
 }
