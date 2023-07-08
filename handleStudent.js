@@ -5,7 +5,7 @@ require('dotenv').config()
 const handleAdd = (req, res) => {
     const studentid = req.body.studentid
     const name = req.body.name
-    const standard = req.body.class
+    const standard = req.body.standard
     const batch = req.body.batch
     const fees = req.body.fees
     const phone = req.body.phone
