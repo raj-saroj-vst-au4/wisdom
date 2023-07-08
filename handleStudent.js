@@ -30,10 +30,6 @@ const handleAdd = (req, res) => {
         console.error('Error saving student', error);
         res.status(500).send(error)
       })
-      .finally(() => {
-        // Disconnect from MongoDB
-        mongoose.disconnect()
-      });
 }
 
 const handleFetch = async (req, res) => {
