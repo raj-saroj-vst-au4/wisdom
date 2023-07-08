@@ -113,7 +113,7 @@ const handleDel = async (req, res)=>{
 }
 
 
-const handleFetchall = async (req, res)=>{
+const handleFetchPending = async (req, res)=>{
   try{
     const fees = await Student.aggregate([
       {
@@ -126,7 +126,25 @@ const handleFetchall = async (req, res)=>{
       }
     ]);
     if (fees) {
-      return res.status(200).json({ "data": fees });
+      const pendingData = [];
+      const currdate = new Date();
+      const feeData = fees;
+      for(let j=0; j<feeData.length; j++){
+        if(feeData[j].paymentData.length && feeData[j].active){
+            let defcount = 0
+            let startdate = new Date(feeData[j].joiningdate)
+            while(startdate < currdate){
+                let m = startdate.getMonth()
+                let y = startdate.getFullYear()
+                if(feeData[j].paymentData[0].year[y][m] === false){
+                    defcount += 1
+                }
+                startdate.setMonth(startdate.getMonth() + 1)
+            }
+            pendingData.push({name : feeData[j].name, pendingmonths : defcount, num : feeData[j].number, id : feeData[j]._id})
+        }
+      } 
+      return res.status(200).json({ "data": pendingData });
     }
   }
   catch(err){
@@ -172,4 +190,4 @@ const handleFetch = async (req, res)=>{
 
 }
 
-module.exports = {handleAdd, handleDel, handleFetch, handleFetchall}
+module.exports = {handleAdd, handleDel, handleFetch, handleFetchPending}

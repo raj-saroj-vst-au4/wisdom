@@ -21,7 +21,7 @@ app.post('/addStudent', student.handleAdd);
 
 app.delete('/delStudent/:studentId', student.handleDel)
 
-app.get('/fetchAllFee', fee.handleFetchall)
+app.get('/fetchPendingFee', fee.handleFetchPending)
 app.get('/fetchFee/:studentId', fee.handleFetch)
 app.post('/addFee/:studentId', fee.handleAdd);
 app.post('/delFee/:studentId', fee.handleDel)
