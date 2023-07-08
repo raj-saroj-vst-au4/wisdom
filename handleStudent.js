@@ -8,7 +8,7 @@ const handleAdd = (req, res) => {
     const standard = req.body.standard
     const batch = req.body.batch
     const fees = req.body.fees
-    const phone = req.body.phone
+    const phone = req.body.number
     
     // Create a new student document
     const newStudent = new Student({
