@@ -19,7 +19,7 @@ app.use(cors({
 app.get('/fetchStudents', student.handleFetch);
 app.post('/addStudent', student.handleAdd);
 app.get('/disableStudent/:studentId', student.handleDisable);
-app.get('/promote/:studentId', student.handlePromotion);
+app.get('/promoteStudent/:studentId', student.handlePromotion);
 app.delete('/delStudent/:studentId', student.handleDel);
 
 app.get('/fetchPendingFee', fee.handleFetchPending);
