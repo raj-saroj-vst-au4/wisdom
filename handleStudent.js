@@ -45,6 +45,28 @@ const handleFetch = async (req, res) => {
   }
 };
 
+const handleDisable = async (req, res) => {
+  const studentid = req.params.studentId
+  try {
+    await Student.findByIdAndUpdate(studentid, {active : false})
+    res.status(202).send("Student Disabled Successfully")
+  }catch(err){
+    res.status(500).send(err);
+  }
+  
+}
+
+const handlePromotion = async (req, res) => {
+  const studentid = req.params.studentId
+  try {
+    await Student.findByIdAndUpdate(studentid, {$inc: { class: 1 }})
+    res.status(202).send("Student Disabled Successfully")
+  }catch(err){
+    res.status(500).send(err);
+  }
+  
+}
+
 const handleDel = async (req, res) =>{
   const studentId = req.params.studentId;
   try{
@@ -57,4 +79,4 @@ const handleDel = async (req, res) =>{
 
 }
 
-module.exports = {handleAdd, handleFetch, handleDel}
+module.exports = {handleAdd, handleFetch, handleDisable, handlePromotion, handleDel}
