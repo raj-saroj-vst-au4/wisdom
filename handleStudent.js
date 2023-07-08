@@ -23,7 +23,6 @@ const handleAdd = (req, res) => {
     // Save the student document
     newStudent.save()
       .then(() => {
-        console.log('Student saved successfully');
         res.status(200).send(`new student added successfully`)
       })
       .catch((error) => {
