@@ -9,7 +9,7 @@ const fee = require('./handleFee');
 const { handleLogin, handleReg } = require('./handleLogin');
 
 require('dotenv').config()
-const uri = `mongodb+srv://${process.env.DBUID}:${process.env.DBPASS}@wisdomcluster.l40bgon.mongodb.net/wisdomdb`;
+const uri = `mongodb+srv://${process.env.DBUID}:${process.env.DBPASS}@${process.env.DB}/wisdomdb`;
 
 const app = express();
 
